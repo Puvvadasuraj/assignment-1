@@ -32,6 +32,39 @@ const converter = (obj) => {
     dueDate: obj.due_date,
   };
 };
+const isStatus = (query) => {
+  return query.status !== undefined;
+};
+const isPriority = (query) => {
+  return query.priority !== undefined;
+};
+app.get("/todos/", async (request, response) => {
+  const { status, priority, todo, category, dueDate } = request.query;
+  let query = "";
+  let data = "";
+  switch (true) {
+    case isStatus(request.query):
+      query = `
+        SELECT
+            *
+        FROM
+            todo
+        WHERE
+            status='${status}';`;
+      break;
+    case isPriority(request.query):
+      query = `
+        SELECT
+            *
+        FROM
+            todo
+        WHERE
+            priority='${priority}';`;
+      break;
+  }
+  data = await database.all(query);
+  response.send(data.map((obj) => converter(obj)));
+});
 app.get("/todos/:todoId/", async (request, response) => {
   const { todoId } = request.params;
   const requestQuery = `

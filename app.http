@@ -24,3 +24,6 @@ Content-Type: application/json
 {
     "category": "LEARNING "
 }
+
+###
+GET http://localhost:3000/todos/?priority=HIGH
